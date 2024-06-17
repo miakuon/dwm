@@ -47,18 +47,21 @@ static const Layout layouts[] = {
 /* key definitions */
 #define MODKEY Mod4Mask //WinKey
 #define ALT Mod1Mask
+#define Control ControlMask
+#define Shift ShiftMask
 #define TAGKEYS(KEY,TAG) \
 	{ MODKEY,                       KEY,      view,           {.ui = 1 << TAG} }, \
-	{ MODKEY|ControlMask,           KEY,      toggleview,     {.ui = 1 << TAG} }, \
-	{ MODKEY|ShiftMask,             KEY,      tag,            {.ui = 1 << TAG} }, \
-	{ MODKEY|ControlMask|ShiftMask, KEY,      toggletag,      {.ui = 1 << TAG} },
+	{ MODKEY|Control,               KEY,      toggleview,     {.ui = 1 << TAG} }, \
+	{ MODKEY|Shift,                 KEY,      tag,            {.ui = 1 << TAG} }, \
+	{ MODKEY|Control|Shift,         KEY,      toggletag,      {.ui = 1 << TAG} },
 
 /* helper for spawning shell commands in the pre dwm-5.0 fashion */
 #define SHCMD(cmd) { .v = (const char*[]){ "/bin/sh", "-c", cmd, NULL } }
 
 /* commands */
 static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() */
-static const char *dmenucmd[] = { "dmenu_run", "-i", "-c", "-l", 10, "-p", "Execute:", "-m", dmenumon, "-fn", dmenufont, "-nb", gray2, "-nf", white, "-sb", accent, "-sf", gray4, NULL };
+static const char *dmenucmd[] = { "dmenu_run", "-i", "-c", "-l", "10", "-p", "Execute:", "-m", dmenumon, "-fn", dmenufont, "-nb", gray2, "-nf", white, "-sb", accent, "-sf", gray4, NULL };
+static const char *dmenucmd[] = { "dmenu_run_en.sh", dmenumon, dmenufont, gray2, white, accent, gray4, NULL};
 static const char *termcmd[]  = { "xterm", NULL };
 static const char *obsdcmd[]  = { "obsidian", NULL };
 static const char *fmcmd[] = { "spacefm", NULL };
@@ -72,15 +75,17 @@ static const char *rotate_scree_right[] = {"xrandr", "--output", "eDP1", "--rota
 static const char *rotate_scree_left[] = {"xrandr", "--output", "eDP1", "--rotate", "right", NULL };
 static const char *rotate_scree_normal[] = {"xrandr", "--output", "eDP1", "--rotate", "normal", NULL };
 static const char *rotate_scree_upsidedown[] = {"xrandr", "--output", "eDP1", "--rotate", "inverted", NULL };
-
+static const char *set_layout_us[] = {"xkblayout-state", "set", "0"};
+static const char *set_layout_ru[] = {"xkblayout-state", "set", "1"};
+static const char *set_layout_fr[] = {"xkblayout-state", "set", "2"};
 
 static Key keys[] = {
 	/* modifier                     key        function        argument */
 	{ MODKEY,                       XK_p,      spawn,          {.v = dmenucmd } },                        //choose to launch a program
-	{ MODKEY|ShiftMask,             XK_Return, spawn,          {.v = termcmd } },                         //Terminal
+	{ MODKEY|Shift,                 XK_Return, spawn,          {.v = termcmd } },                         //Terminal
 	{ MODKEY,                       XK_Return, spawn,          {.v = termcmd } },
-    { MODKEY|ControlMask,           XK_Return, spawn,          {.v = fmcmd } },                           //Explorer
-    { MODKEY,                       XK_o,      spawn,          {.v = obsdcmd } },                         //Obsidian
+        { MODKEY|Control,               XK_Return, spawn,          {.v = fmcmd } },                           //Explorer
+        { MODKEY,                       XK_o,      spawn,          {.v = obsdcmd } },                         //Obsidian
 	{ 0,                            XK_Print,  spawn,          {.v = scrotcmd } },                        //screenshot
 	{ MODKEY,                       XK_b,      togglebar,      {0} },                                     //Show/hide status
 	{ MODKEY,                       XK_j,      focusstack,     {.i = +1 } },                              //Focus on a widow above in stack
@@ -91,28 +96,31 @@ static Key keys[] = {
 	{ MODKEY,                       XK_l,      setmfact,       {.f = +0.05} },                            //Move border it Tile mode right
 	{ MODKEY,                       XK_Return, zoom,           {0} },                                     //Move widow on top of the stack
 	{ MODKEY,                       XK_Tab,    view,           {0} },                                     //go to previous Tag
-	{ MODKEY|ShiftMask,             XK_c,      killclient,     {0} },                                     //close window
-	{ MODKEY,                       XK_t,      setlayout,      {.v = &layouts[0]} },                      //Tile layout
-	{ MODKEY,                       XK_f,      setlayout,      {.v = &layouts[1]} },                      //Float layout
-	{ MODKEY,                       XK_m,      setlayout,      {.v = &layouts[2]} },                      //Monocle layout
+	{ MODKEY|Shift,                 XK_c,      killclient,     {0} },                                     //close window
+	{ MODKEY,                       XK_t,      setlayout,      {.v = &layouts[1]} },                      //Tile layout
+	{ MODKEY,                       XK_f,      setlayout,      {.v = &layouts[2]} },                      //Float layout
+	{ MODKEY,                       XK_m,      setlayout,      {.v = &layouts[0]} },                      //Monocle layout
 	{ MODKEY,                       XK_space,  setlayout,      {0} },                                     //go to previous layout
-	{ MODKEY|ShiftMask,             XK_space,  togglefloating, {0} },                                     //Make focused window in floating mode
+	{ MODKEY|Shift,                 XK_space,  togglefloating, {0} },                                     //Make focused window in floating mode
 	{ MODKEY,                       XK_0,      view,           {.ui = ~0 } },                             //Selects all the tags
-	{ MODKEY|ShiftMask,             XK_0,      tag,            {.ui = ~0 } },                             //Assign window all tags
+	{ MODKEY|Shift,                 XK_0,      tag,            {.ui = ~0 } },                             //Assign window all tags
 	{ MODKEY,                       XK_comma,  focusmon,       {.i = -1 } },                              // 
 	{ MODKEY,                       XK_period, focusmon,       {.i = +1 } },                              //
-	{ MODKEY|ShiftMask,             XK_comma,  tagmon,         {.i = -1 } },                              //
-	{ MODKEY|ShiftMask,             XK_period, tagmon,         {.i = +1 } },                              //
+	{ MODKEY|Shift,                 XK_comma,  tagmon,         {.i = -1 } },                              //
+	{ MODKEY|Shift,                 XK_period, tagmon,         {.i = +1 } },                              //
 	{ MODKEY,                       XK_Right,  spawn,          {.v = rotate_scree_right} },               //
 	{ MODKEY,                       XK_Left,   spawn,          {.v = rotate_scree_left} },                //
-	{ MODKEY,                       XK_Up,     spawn,          {.v = rotate_scree_upsidedown } },              //
-	{ MODKEY,                       XK_Down,   spawn,          {.v = rotate_scree_normal } },          //
-	{ MODKEY,                       XK_F4,     quit,           {0} },                                     //close dwm
+	{ MODKEY,                       XK_Up,     spawn,          {.v = rotate_scree_upsidedown } },         //
+	{ MODKEY,                       XK_Down,   spawn,          {.v = rotate_scree_normal } },             //
+	{ MODKEY|Shift,                 XK_F4,     quit,           {0} },                                     //close dwm
+	{ MODKEY,                       XK_F1,     spawn,          {.v = set_layout_us}},                     //
+	{ MODKEY,                       XK_F2,     spawn,          {.v = set_layout_ru}},                     //
+	{ MODKEY,                       XK_F3,     spawn,          {.v = set_layout_fr}},                     //
 	{ 0,                            XF86XK_MonBrightnessUp,    spawn,          {.v = incr_brightness } }, //
-	{ 0,       					    XF86XK_MonBrightnessDown,  spawn,          {.v = decr_brightness } }, //
-	{ 0,          					XF86XK_AudioRaiseVolume,   spawn,          {.v = incr_sound } },      //
-	{ 0,	      					XF86XK_AudioLowerVolume,   spawn,	       {.v = decr_sound } },      //
-	{ 0,          					XF86XK_AudioMute,          spawn,          {.v = mute_sound } },        //
+	{ 0,       		        XF86XK_MonBrightnessDown,  spawn,          {.v = decr_brightness } }, //
+	{ 0,          			XF86XK_AudioRaiseVolume,   spawn,          {.v = incr_sound } },      //
+	{ 0,	      			XF86XK_AudioLowerVolume,   spawn,          {.v = decr_sound } },      //
+	{ 0,          			XF86XK_AudioMute,          spawn,          {.v = mute_sound } },        //
 	TAGKEYS(                        XK_1,                      0)
 	TAGKEYS(                        XK_2,                      1)
 	TAGKEYS(                        XK_3,                      2)
@@ -136,8 +144,8 @@ static const Button buttons[] = {
 	{ ClkClientWin,         MODKEY,         Button2,        togglefloating, {0} },
 	{ ClkClientWin,         MODKEY,         Button3,        resizemouse,    {0} },
 	{ ClkTagBar,            0,              Button1,        view,           {0} },
-	{ ClkTagBar,            0,              Button3,        toggleview,     {0} },
+	{ ClkTagBar,            0,              Button2,        toggleview,     {0} },
 	{ ClkTagBar,            MODKEY,         Button1,        tag,            {0} },
-	{ ClkTagBar,            MODKEY,         Button3,        toggletag,      {0} },
+	{ ClkTagBar,            MODKEY,         Button2,        toggletag,      {0} },
 };
 
