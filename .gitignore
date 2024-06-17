@@ -1,0 +1,10 @@
+.gitignore
+*.orig
+*.rej
+larbs.pdf
+patches
+themes
+util.o
+dwm
+dwm.o
+drw.o
