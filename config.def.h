@@ -84,8 +84,10 @@ static Key keys[] = {
 	{ MODKEY,                       XK_p,      spawn,          {.v = dmenucmd } },                        //choose to launch a program
 	{ MODKEY|Shift,                 XK_Return, spawn,          {.v = termcmd } },                         //Terminal
 	{ MODKEY,                       XK_Return, spawn,          {.v = termcmd } },
-        { MODKEY|Control,               XK_Return, spawn,          {.v = fmcmd } },                           //Explorer
-        { MODKEY,                       XK_o,      spawn,          {.v = obsdcmd } },                         //Obsidian
+    { MODKEY|Control,               XK_Return, spawn,          {.v = fmcmd } },                           //Explorer
+    { MODKEY,                       XK_o,      spawn,          {.v = obsdcmd } },                         //Obsidian
+	{ MODKEY,                       XK_e,      spawn,          {.v = emacscmd } },                        //Emacs
+    { MODKEY,                       XK_t,      spawn,          {.v = telegramcmd } },					  //Telegram
 	{ 0,                            XK_Print,  spawn,          {.v = scrotcmd } },                        //screenshot
 	{ MODKEY,                       XK_b,      togglebar,      {0} },                                     //Show/hide status
 	{ MODKEY,                       XK_j,      focusstack,     {.i = +1 } },                              //Focus on a widow above in stack
@@ -97,9 +99,9 @@ static Key keys[] = {
 	{ MODKEY,                       XK_Return, zoom,           {0} },                                     //Move widow on top of the stack
 	{ MODKEY,                       XK_Tab,    view,           {0} },                                     //go to previous Tag
 	{ MODKEY|Shift,                 XK_c,      killclient,     {0} },                                     //close window
-	{ MODKEY,                       XK_t,      setlayout,      {.v = &layouts[1]} },                      //Tile layout
-	{ MODKEY,                       XK_f,      setlayout,      {.v = &layouts[2]} },                      //Float layout
-	{ MODKEY,                       XK_m,      setlayout,      {.v = &layouts[0]} },                      //Monocle layout
+	{ MODKEY|Shift,                 XK_t,      setlayout,      {.v = &layouts[1]} },                      //Tile layout
+	{ MODKEY|Shift,                 XK_f,      setlayout,      {.v = &layouts[2]} },                      //Float layout
+	{ MODKEY|Shift,                 XK_m,      setlayout,      {.v = &layouts[0]} },                      //Monocle layout
 	{ MODKEY,                       XK_space,  setlayout,      {0} },                                     //go to previous layout
 	{ MODKEY|Shift,                 XK_space,  togglefloating, {0} },                                     //Make focused window in floating mode
 	{ MODKEY,                       XK_0,      view,           {.ui = ~0 } },                             //Selects all the tags
